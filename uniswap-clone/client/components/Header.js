@@ -17,11 +17,11 @@ const style = {
     navItem: `px-4 py-2 m-1 flex items-center text-lg  font-semibold text-[0.9rem] cursor-pointer rounded-3xl `,
     activeNavItem:  `bg-[#20242A]` , 
     buttonsContainer: `flex w-1/4 justify-end items-center`,
-    button: `flex items-center bg-[#191B1F] rounded-2xl mx-2 text-[0.9rem] font-semibold  cursor-pointer`,
+    button: `flex items-center bg-[#191B1F] rounded-2xl mx-2 text-[0.9rem] font-semibold cursor-pointer`,
     buttonPadding: `p-2`,
     buttonTextContainer: `h-8 flex items-center`,
     buttonIconContainer: `flex items-center justify-center w-8 h-8`,
-    buttonAccent: `bg-[#172A42] border border-[#163256] hover:border-[#234169] h-full rounded-2xl flex items justify-center text-[#4F90EA]`,
+    buttonAccent: `bg-[#172A42] border border-[#163256] hover:border-[#234169] h-full rounded-2xl flex items-center justify-center text-[#4F90EA]`,
 
 }
 
@@ -82,19 +82,26 @@ const Header = ( ) => {
                             <div className={style.buttonIconContainer}>
                                 <AiOutlineDown/>
                             </div>
-
                         </div>
 
-                        <div
-                        onClick={() => connectWallet()}
-                        className={`${style.button} ${style.buttonPadding}`}
-                        >
+                        {currentAccount ? (
+                                <div className={`${style.button} ${style.buttonPadding}`}>
+                                      <div className={style.buttonTextContainer}>0x88...5cd</div>
+                                </div>
+                            ) : (
+                             <div
+                                       onClick={() => connectWallet()}
+                                       className={`${style.button} ${style.buttonPadding}`}
+                             >
 
-                            <div className={`${style.buttonAccent} ${style.buttonPadding}`}>
-                                Connect Wallet
-                            </div>
+                                      <div className={`${style.buttonAccent} ${style.buttonPadding}`}>
+                                               ConnectWallet
+                                      </div>
 
-                        </div>
+                              </div>
+                        )}
+                        
+                        
                         
                             <div className={`${style.buttonAccent} ${style.buttonPadding}`}>
                                 <div className={`${style.buttonIconContainer} mx-2`}>
