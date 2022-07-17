@@ -85,7 +85,11 @@ export const TransactionProvider = ({ children }) => {
     }
 
 
+   //handling change in the form
 
+   const handleChange = (e, name) => {
+    setFormData(prevState => ({ ...prevState, [name]: e.target.value }))
+  }
 
 
     const checkIfWalletIsConnected = async (metamask = eth) => {
@@ -111,6 +115,7 @@ export const TransactionProvider = ({ children }) => {
             connectWallet,
             currentAccount,
             sendTransaction,
+            handleChange,
           }}
         >
           {children}
