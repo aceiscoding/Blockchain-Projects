@@ -40,6 +40,28 @@ export const TransactionProvider = ({ children }) => {
         checkIfWalletIsConnected()
       }, [])
 
+
+
+//create user profile on sanity
+
+useEffect(() => {
+  if (!currentAccount) return
+  ;(async () => {
+    const userDoc = {
+      _type: 'users',
+      _id: currentAccount,
+      userName: 'Unnamed',
+      address: currentAccount,
+    }
+
+    await client.createIfNotExists(userDoc)
+  })()
+}, [currentAccount])
+
+
+
+
+
     const connectWallet = async (metamask = eth) => {
         try {
           if (!metamask) return alert('Please install metamask ')
