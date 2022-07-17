@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { contractABI, contractAddress } from '../lib/constants'
 import { ethers } from 'ethers'
 import { client } from '../lib/sanityClient'
+import { useRouter } from 'next/router'
+
 
 
 
@@ -30,6 +32,7 @@ const getEthereumContract = () => {
 export const TransactionProvider = ({ children }) => {
     const [currentAccount, setCurrentAccount] = useState()
     const [isLoading, setIsLoading] = useState(false)
+    const router = useRouter()
     const [formData, setFormData] = useState({
     addressTo: '',
     amount: '',
@@ -166,6 +169,18 @@ useEffect(() => {
     return
   }
   
+
+  //trigger loading modal
+
+  useEffect(() => {
+    if (isLoading) {
+      router.push(`/?loading=${currentAccount}`)
+    } else {
+      router.push(`/`)
+    }
+  }, [isLoading])
+
+
 
     const checkIfWalletIsConnected = async (metamask = eth) => {
         try {
