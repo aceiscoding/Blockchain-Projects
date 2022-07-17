@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { contractABI, contractAddress } from '../lib/constants'
 import { ethers } from 'ethers'
+import { client } from '../lib/sanityClient'
+
 
 
 export const TransactionContext = React.createContext()
@@ -88,12 +90,12 @@ export const TransactionProvider = ({ children }) => {
   
           // DB
 
-       //  await saveTransaction(
-       //   transactionHash.hash,
-        //  amount,
-        //  connectedAccount,
-        //  addressTo,
-      //  )
+       await saveTransaction(
+       transactionHash.hash,
+      amount,
+      connectedAccount,
+      addressTo,
+      )
   
         setIsLoading(false)
       } catch (error) {
@@ -108,6 +110,40 @@ export const TransactionProvider = ({ children }) => {
     setFormData(prevState => ({ ...prevState, [name]: e.target.value }))
   }
 
+//Saves transaction to Sanity DBcd
+  const saveTransaction = async (
+    txHash,
+    amount,
+    fromAddress = currentAccount,
+    toAddress,
+  ) => {
+    const txDoc = {
+      _type: 'transactions',
+      _id: txHash,
+      fromAddress: fromAddress,
+      toAddress: toAddress,
+      timestamp: new Date(Date.now()).toISOString(),
+      txHash: txHash,
+      amount: parseFloat(amount),
+    }
+
+    await client.createIfNotExists(txDoc)
+
+    await client
+      .patch(currentAccount)
+      .setIfMissing({ transactions: [] })
+      .insert('after', 'transactions[-1]', [
+        {
+          _key: txHash,
+          _ref: txHash,
+          _type: 'reference',
+        },
+      ])
+      .commit()
+
+    return
+  }
+  
 
     const checkIfWalletIsConnected = async (metamask = eth) => {
         try {
